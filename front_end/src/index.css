@@ -194,3 +194,7 @@ body {
   margin-left: 7px;
   cursor: pointer;
 }
+
+.No_task {
+  color: white;
+}

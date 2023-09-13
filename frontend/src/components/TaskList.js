@@ -1,11 +1,16 @@
 import { FaCheckDouble, FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
-export default function TaskList() {
+export default function TaskList({task, index}) {
+
+  const getSingleTask = (task) => {
+    
+  }
+
   return (
     <div className="task">
       <p className="task__name">
-        <b>1</b>
-        taskName
+        <b>{index + 1}.</b>
+        {task.name}
       </p>
       <div className="task-icons">
         <FaCheckDouble color="green" />

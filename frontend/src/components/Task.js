@@ -1,8 +1,30 @@
-import { useState } from "react";
+import { toast } from "react-toastify";
+import { URL } from "../App";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
+import { useGlobalContext } from "../hook/useGlogbalContext";
+
 const Task = () => {
-  const [tasks, setTasks] = useState([1, 2, 3]);
+  const [isLoading, setIsLoading] = useState(false);
+  const { tasks, dispatch } = useGlobalContext();
+
+  useEffect(() => {
+    const getTasks = async () => {
+      setIsLoading(true);
+      try {
+        const { data } = await axios.get(`${URL}/api/tasks`);
+        dispatch({ type: "ALL_TASKS", payload: data });
+        setIsLoading(false);
+      } catch (error) {
+        toast.error(error.message);
+        setIsLoading(false);
+      }
+    };
+
+    getTasks();
+  }, [dispatch]);
 
   return (
     <div className="container">
@@ -15,6 +37,7 @@ const Task = () => {
           <div className="task__counting">
             <p>
               <b>Total: Tasks: </b>
+              {tasks.length}
             </p>
             <p>
               <b>Completed Tasks: </b>
@@ -22,8 +45,15 @@ const Task = () => {
           </div>
         )}
         <hr />
-
-        <TaskList />
+        {!isLoading && tasks.length === 0 ? (
+          <p>No task added. Please add a task</p>
+        ) : (
+          <>
+            {tasks.map((task, index) => {
+              return <TaskList key={task._id} task={task} index={index} />;
+            })}
+          </>
+        )}
       </div>
     </div>
   );
