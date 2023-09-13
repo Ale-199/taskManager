@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
 import { URL } from "../App";
 
@@ -18,6 +17,12 @@ export default function Task() {
     taskName: "",
     completed: false,
   });
+
+  const { taskName } = formData;
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const getTasks = async () => {
     setIsLoading(true);
@@ -34,12 +39,6 @@ export default function Task() {
   useEffect(() => {
     getTasks();
   }, []);
-
-  const { taskName } = formData;
-
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const createTask = async (e) => {
     e.preventDefault();
@@ -114,14 +113,20 @@ export default function Task() {
     <div className="container">
       <div className="form__container">
         <h2>Task Manager</h2>
-
-        <TaskForm
-          taskName={taskName}
-          handleInputChange={handleInputChange}
-          createTAsk={createTask}
-          isEditing={isEditing}
-          updateTask={updateTask}
-        />
+        <form
+          className="input__form"
+          onSubmit={isEditing ? updateTask : createTask}
+        >
+          <input
+            type="text"
+            placeholder="Add a task"
+            name="taskName"
+            // required="required"
+            value={taskName}
+            onChange={handleInputChange}
+          />
+          <button type="submit">{isEditing ? "Edit" : "Add"}</button>
+        </form>
 
         {tasks.length > 0 && (
           <div className="task__counting">
