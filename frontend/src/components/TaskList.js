@@ -4,7 +4,6 @@ import axios from "axios";
 import TaskForm from "./TaskForm";
 import Task from "./Task";
 import { URL } from "../App";
-import loadingImg from "../assets/loader.gif";
 
 export default function TaskList() {
   const [tasks, setTasks] = useState([]);
@@ -112,53 +111,50 @@ export default function TaskList() {
       return task.completed === true;
     });
     setCompletedTasks(cTask);
-  }, []);
+  }, [tasks]);
 
   return (
-    <div>
-      <h2>Task Manager</h2>
-      <TaskForm
-        name={name}
-        handleInputChange={handleInputChange}
-        createTask={createTask}
-        isEditing={isEditing}
-        updateTask={updateTask}
-      />
-      {tasks.length > 0 && (
-        <div className="--flex-between --pb">
-          <p>
-            <b>Total Tasks:</b> {tasks.length}
-          </p>
-          <p>
-            <b>Completed Tasks:</b> {completedTasks.length}
-          </p>
-        </div>
-      )}
-      <hr />
-      {isLoading && (
-        <div className="--flex-center">
-          <img src={loadingImg} alt="loading" />
-        </div>
-      )}
+    <div className="container">
+      <div className="form__container">
+        <h2>Task Manager</h2>
+        <TaskForm
+          name={name}
+          handleInputChange={handleInputChange}
+          createTask={createTask}
+          isEditing={isEditing}
+          updateTask={updateTask}
+        />
+        {tasks.length > 0 && (
+          <div className="task__counting">
+            <p>
+              <b>Total Tasks:</b> {tasks.length}
+            </p>
+            <p>
+              <b>Completed Tasks:</b> {completedTasks.length}
+            </p>
+          </div>
+        )}
+        <hr />
 
-      {!isLoading && tasks.length === 0 ? (
-        <p className="--py">No task added. Please add a task</p>
-      ) : (
-        <>
-          {tasks.map((task, index) => {
-            return (
-              <Task
-                key={task._id}
-                task={task}
-                index={index}
-                deleteTask={deleteTask}
-                getSingleTask={getSingleTask}
-                setToComplete={setToComplete}
-              />
-            );
-          })}
-        </>
-      )}
+        {!isLoading && tasks.length === 0 ? (
+          <p className="No_task">No task added. Please add a task</p>
+        ) : (
+          <>
+            {tasks.map((task, index) => {
+              return (
+                <Task
+                  key={task._id}
+                  task={task}
+                  index={index}
+                  deleteTask={deleteTask}
+                  getSingleTask={getSingleTask}
+                  setToComplete={setToComplete}
+                />
+              );
+            })}
+          </>
+        )}
+      </div>
     </div>
   );
 }
